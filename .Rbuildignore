@@ -1,0 +1,13 @@
+^\.github$
+
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+
+# renv artifacts
+.Rprofile
+renv.lock
+renv/

@@ -1,0 +1,25 @@
+team_name: "Team Voyager"
+team_abbr: "voyager"
+model_name: "borg1"
+model_abbr: "borg1"
+model_version: "1.0"
+model_contributors: [
+  {
+    "name": "Kathryn Janeway",
+    "email": "k.janeway@starfleet.com"
+  },
+  {
+    "name": "B'Elanna Torres",
+    "email": "b.torres@starfleet.com"
+  }
+]
+website_url: "https://teamvoyager.starfleet"
+license: "cc-by-4.0"
+include_viz: true
+include_ensemble: truer
+include_eval: true
+models_details: [
+    methods: "this the method description of the model.",
+    data_imputs: "description of the data imputs"
+]
+ensemble_of_hub_models": false

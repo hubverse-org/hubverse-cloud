@@ -1,12 +1,12 @@
 {
     "schema_version": "https://raw.githubusercontent.com/Infectious-Disease-Modeling-Hubs/schemas/main/v2.0.0/admin-schema.json",
-    "name": "Template Forecast Hub",
+    "name": "S3 Testhub",
     "maintainer": "Consortium of Infectious Disease Modeling Hubs",
     "contact": {
-        "name": "Joe Bloggs",
-        "email": "j.bloggs@cidmh.com"
+        "name": "Kathryn Janeway",
+        "email": "k.janeway@starfleet.com"
     },
-    "repository_url": "https://github.com/Infectious-Disease-Modeling-Hubs/hubTemplate",
-    "file_format": ["csv", "parquet"],
+    "repository_url": "https://github.com/Infectious-Disease-Modeling-Hubs/s3-testhub",
+    "file_format": ["csv", "parquet", "arrow"],
     "timezone": "US/Eastern"
 }
