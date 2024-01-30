@@ -1,0 +1,26 @@
+name: Publish to S3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::521138137878:role/s3-testhub-githubaction
+        aws-region: us-east-1
+
+    - name: Copy files to S3
+      run: |
+        aws s3 cp ./hub-config s3://s3-testhub/hub-config --recursive
+        aws s3 cp ./model-metadata s3://s3-testhub/model-metadata --recursive
+        aws s3 cp ./model-output s3://s3-testhub/model-output --recursive
