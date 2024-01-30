@@ -21,6 +21,6 @@ jobs:
 
     - name: Copy files to S3
       run: |
-        aws s3 cp ./hub-config s3://s3-testhub/hub-config --recursive
-        aws s3 cp ./model-metadata s3://s3-testhub/model-metadata --recursive
-        aws s3 cp ./model-output s3://s3-testhub/model-output --recursive
+        aws s3 sync ./hub-config s3://s3-testhub/hub-config --delete
+        aws s3 sync ./model-metadata s3://s3-testhub/model-metadata --delete
+        aws s3 sync ./model-output s3://s3-testhub/model-output --delete
