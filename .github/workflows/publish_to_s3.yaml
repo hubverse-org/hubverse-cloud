@@ -20,7 +20,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::521138137878:role/s3-testhub-githubaction
+        role-to-assume: arn:aws:iam::312560106906:role/s3-testhub-githubaction
         aws-region: us-east-1
 
     - name: Copy files to S3
