@@ -22,9 +22,9 @@ jobs:
       # parse cloud-related fields from admin config
       # (jq is installed on Github-hosted runners)
       run: |
-        echo "CLOUD_ENABLED=$(cat ./hub-config/admin.json | jq '.cloud.enabled')">> $GITHUB_ENV
-        echo "CLOUD_PLATFORM=$(cat ./hub-config/admin.json | jq '.cloud.host.name')">> $GITHUB_ENV
-        echo "CLOUD_STORAGE=$(cat ./hub-config/admin.json | jq '.cloud.host.storage')">> $GITHUB_ENV
+        echo "CLOUD_ENABLED=$(cat ./hub-config/admin.json | jq -r '.cloud.enabled')">> $GITHUB_ENV
+        echo "CLOUD_PLATFORM=$(cat ./hub-config/admin.json | jq -r '.cloud.host.name')">> $GITHUB_ENV
+        echo "CLOUD_STORAGE=$(cat ./hub-config/admin.json | jq -r '.cloud.host.storage')">> $GITHUB_ENV
 
     - name: Output cloud config
       run: |
