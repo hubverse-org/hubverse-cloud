@@ -8,5 +8,12 @@
     },
     "repository_url": "https://github.com/Infectious-Disease-Modeling-Hubs/s3-testhub",
     "file_format": ["csv", "parquet", "arrow"],
-    "timezone": "US/Eastern"
+    "timezone": "US/Eastern",
+    "cloud": {
+        "enabled": true,
+        "host": {
+          "name": "aws",
+          "storage": "hubverse-cloud"
+        }
+    }
 }
