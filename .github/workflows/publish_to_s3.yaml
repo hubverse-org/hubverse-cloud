@@ -1,6 +1,7 @@
 name: Publish to S3
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -17,14 +18,30 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Read cloud config
+      # parse cloud-related fields from admin config
+      # (jq is installed on Github-hosted runners)
+      run: |
+        echo "CLOUD_ENABLED=$(cat ./hub-config/admin.json | jq '.cloud.enabled')">> $GITHUB_ENV
+        echo "CLOUD_PLATFORM=$(cat ./hub-config/admin.json | jq '.cloud.host.name')">> $GITHUB_ENV
+        echo "CLOUD_STORAGE=$(cat ./hub-config/admin.json | jq '.cloud.host.storage')">> $GITHUB_ENV
+
+    - name: Output cloud config
+      run: |
+        echo format('Cloud enabled: { env.CLOUD_ENABLED }')
+        echo format('Cloud platform: { env.CLOUD_PLATFORM }')
+        echo format('Cloud storage name (S3 bucket, for example): { env.CLOUD_STORAGE }')
+
     - name: Configure AWS credentials
+      if: env.CLOUD_ENABLED
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::312560106906:role/s3-testhub-githubaction
+        role-to-assume: format('arn:aws:iam::767397675902:role/{ env.CLOUD_STORAGE }')
         aws-region: us-east-1
 
     - name: Copy files to S3
+      if: env.CLOUD_ENABLED
       run: |
-        aws s3 sync ./hub-config s3://s3-testhub/hub-config --delete
-        aws s3 sync ./model-metadata s3://s3-testhub/model-metadata --delete
-        aws s3 sync ./model-output s3://s3-testhub/model-output --delete
+        aws s3 sync format('./hub-config s3://{ env.CLOUD_STORAGE }/raw/hub-config --delete')
+        aws s3 sync format('./model-metadata s3://{ env.CLOUD_STORAGE }/model-metadata --delete')
+        aws s3 sync format('./model-output s3://{ env.CLOUD_STORAGE }/model-output --delete')
