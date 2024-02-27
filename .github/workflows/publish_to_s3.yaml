@@ -28,9 +28,13 @@ jobs:
 
     - name: Output cloud config
       run: |
-        echo format('Cloud enabled: { env.CLOUD_ENABLED }')
-        echo format('Cloud platform: { env.CLOUD_PLATFORM }')
-        echo format('Cloud storage name (S3 bucket, for example): { env.CLOUD_STORAGE }')
+        echo "Cloud enabled: $CLOUD_ENABLED"
+        echo "Cloud platform: $CLOUD_PLATFORM"
+        echo "Cloud storage name (S3 bucket, for example): $CLOUD_STORAGE"
+      env:
+        CLOUD_ENABLED: ${{ env.CLOUD_ENABLED }}
+        CLOUD_PLATFORM: ${{ env.CLOUD_PLATFORM }}
+        CLOUD_STORAGE: ${{ env.CLOUD_STORAGE }}
 
     - name: Configure AWS credentials
       if: env.CLOUD_ENABLED
@@ -42,6 +46,8 @@ jobs:
     - name: Copy files to S3
       if: env.CLOUD_ENABLED
       run: |
-        aws s3 sync format('./hub-config s3://{ env.CLOUD_STORAGE }/raw/hub-config --delete')
-        aws s3 sync format('./model-metadata s3://{ env.CLOUD_STORAGE }/model-metadata --delete')
-        aws s3 sync format('./model-output s3://{ env.CLOUD_STORAGE }/model-output --delete')
+        aws s3 sync ./hub-config "s3://$CLOUD_STORAGE/raw/hub-config --delete"
+        aws s3 sync ./model-metadata "s3://$CLOUD_STORAGE/model-metadata --delete"
+        aws s3 sync ./model-output "s3://$CLOUD_STORAGE/model-output --delete"
+      env:
+        CLOUD_STORAGE: ${{ env.CLOUD_STORAGE }}
