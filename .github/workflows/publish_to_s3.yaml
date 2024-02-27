@@ -40,14 +40,14 @@ jobs:
       if: env.CLOUD_ENABLED
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::767397675902:role/${{ env.CLOUD_STORAGE })
+        role-to-assume: arn:aws:iam::767397675902:role/${{ env.CLOUD_STORAGE }}
         aws-region: us-east-1
 
     - name: Copy files to S3
       if: env.CLOUD_ENABLED
       run: |
-        aws s3 sync ./hub-config "s3://$CLOUD_STORAGE/raw/hub-config --delete"
-        aws s3 sync ./model-metadata "s3://$CLOUD_STORAGE/model-metadata --delete"
-        aws s3 sync ./model-output "s3://$CLOUD_STORAGE/model-output --delete"
+        aws s3 sync ./hub-config "s3://$CLOUD_STORAGE/raw/hub-config" --delete
+        aws s3 sync ./model-metadata "s3://$CLOUD_STORAGE/model-metadata" --delete
+        aws s3 sync ./model-output "s3://$CLOUD_STORAGE/model-output" --delete
       env:
         CLOUD_STORAGE: ${{ env.CLOUD_STORAGE }}
