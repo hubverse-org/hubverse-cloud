@@ -37,7 +37,7 @@ jobs:
 
     - name: Configure AWS credentials
       if: env.CLOUD_ENABLED == 'true'
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/${{ env.CLOUD_STORAGE }}
         aws-region: us-east-1
