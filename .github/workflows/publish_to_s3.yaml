@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+env:
+  # Hubverse AWS account number
+  AWS_ACCOUNT: 767397675902
+
 permissions:
   contents: read
 
@@ -35,7 +39,7 @@ jobs:
       if: env.CLOUD_ENABLED == 'true'
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::767397675902:role/${{ env.CLOUD_STORAGE }}
+        role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/${{ env.CLOUD_STORAGE }}
         aws-region: us-east-1
 
     - name: Sync files to cloud storage
