@@ -1,40 +1,34 @@
-name: Publish to S3
+name: Upload hub data to cloud storage
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+        branches: [main, master]
 
 permissions:
-  id-token: write
   contents: read
 
 jobs:
   upload:
     runs-on: ubuntu-latest
+    # write permissions required to fetch a token for AWS authorization
+    permissions:
+      id-token: write
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Read cloud config
-      # parse cloud-related fields from admin config
+    - name: Get hub cloud config
+      # save cloud-related fields from admin config as environment variables
       # (jq is installed on Github-hosted runners)
       run: |
-        echo "CLOUD_ENABLED=$(cat ./hub-config/admin.json | jq -r '.cloud.enabled')">> $GITHUB_ENV
-        echo "CLOUD_PLATFORM=$(cat ./hub-config/admin.json | jq -r '.cloud.host.name')">> $GITHUB_ENV
-        echo "CLOUD_STORAGE=$(cat ./hub-config/admin.json | jq -r '.cloud.host.storage')">> $GITHUB_ENV
-
-    - name: Output cloud config
-      run: |
-        echo "Cloud enabled: $CLOUD_ENABLED"
-        echo "Cloud platform: $CLOUD_PLATFORM"
-        echo "Cloud storage name (S3 bucket, for example): $CLOUD_STORAGE"
-      env:
-        CLOUD_ENABLED: ${{ env.CLOUD_ENABLED }}
-        CLOUD_PLATFORM: ${{ env.CLOUD_PLATFORM }}
-        CLOUD_STORAGE: ${{ env.CLOUD_STORAGE }}
+        cloud_enabled=$(cat ./hub-config/admin.json | jq -r '.cloud.enabled') && echo "CLOUD_ENABLED=$cloud_enabled"
+        cloud_host=$(cat ./hub-config/admin.json | jq -r '.cloud.host.name') && echo "CLOUD_HOST=$cloud_host"
+        cloud_storage=$(cat ./hub-config/admin.json | jq -r '.cloud.host.storage') && echo "CLOUD_STORAGE=$cloud_storage"
+        echo "CLOUD_ENABLED=$cloud_enabled" >> $GITHUB_ENV
+        echo "CLOUD_HOST=$cloud_host" >> $GITHUB_ENV
+        echo "CLOUD_STORAGE=$cloud_storage" >> $GITHUB_ENV
 
     - name: Configure AWS credentials
       if: env.CLOUD_ENABLED == 'true'
@@ -43,7 +37,7 @@ jobs:
         role-to-assume: arn:aws:iam::767397675902:role/${{ env.CLOUD_STORAGE }}
         aws-region: us-east-1
 
-    - name: Copy files to S3
+    - name: Sync files to cloud storage
       if: env.CLOUD_ENABLED == 'true'
       run: |
         aws s3 sync ./hub-config "s3://$CLOUD_STORAGE/hub-config" --delete
