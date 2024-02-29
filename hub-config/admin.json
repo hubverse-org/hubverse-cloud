@@ -13,7 +13,8 @@
         "enabled": true,
         "host": {
           "name": "aws",
-          "storage": "hubverse-cloud"
+          "storage_service": "s3",
+          "storage_location": "hubverse-cloud"
         }
     }
 }
