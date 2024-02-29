@@ -12,13 +12,12 @@ env:
 
 permissions:
   contents: read
+  # id-token write required for AWS auth
+  id-token: write
 
 jobs:
   upload:
     runs-on: ubuntu-latest
-    # write permissions required to fetch a token for AWS authorization
-    permissions:
-      id-token: write
 
     steps:
     - name: Checkout
@@ -26,7 +25,7 @@ jobs:
 
     - name: Get hub cloud config
       # save cloud-related fields from admin config as environment variables
-      # (jq is installed on Github-hosted runners)
+      # (jq json parser is installed on Github-hosted runners)
       run: |
         cloud_enabled=$(cat ./hub-config/admin.json | jq -r '.cloud.enabled') \
           && echo "CLOUD_ENABLED=$cloud_enabled"
@@ -42,6 +41,7 @@ jobs:
         echo "CLOUD_STORAGE_LOCATION=$cloud_storage_location" >> $GITHUB_ENV
 
     - name: Configure AWS credentials
+      # request credentials to assume the hub's AWS role via OpenID Connect
       if: env.CLOUD_ENABLED == 'true'
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -51,8 +51,8 @@ jobs:
     - name: Sync files to cloud storage
       if: env.CLOUD_ENABLED == 'true'
       run: |
-        aws s3 sync ./hub-config "s3://$CLOUD_STORAGE_LOCATION/hub-config" --delete
-        aws s3 sync ./model-metadata "s3://$CLOUD_STORAGE_LOCATION/model-metadata" --delete
-        aws s3 sync ./model-output "s3://$CLOUD_STORAGE_LOCATION/raw/model-output" --delete
+        aws s3 sync ./hub-config "s3://$BUCKET_NAME/hub-config" --delete
+        aws s3 sync ./model-metadata "s3://$BUCKET_NAME/model-metadata" --delete
+        aws s3 sync ./model-output "s3://$BUCKET_NAME/raw/model-output" --delete
       env:
-        CLOUD_STORAGE: ${{ env.CLOUD_STORAGE_LOCATION }}
+        BUCKET_NAME: ${{ env.CLOUD_STORAGE_LOCATION }}
