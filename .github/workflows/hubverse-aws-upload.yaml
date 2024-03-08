@@ -48,7 +48,6 @@ jobs:
         curl https://rclone.org/install.sh | sudo bash
         rclone version
 
-
     - name: Sync files to cloud storage
       # sync specified hub directories to S3
       # (to exclude a directory, remove it from the hub_directories list below)
@@ -59,6 +58,7 @@ jobs:
           'hub-config'
           'model-abstracts'
           'model-metadata'
+          # temporarily include model-output here
           'model-output'
           'target-data'
         )
@@ -69,9 +69,13 @@ jobs:
             rclone sync \
               "./$DIRECTORY/" \
               ":s3,provider=AWS,env_auth:$BUCKET_NAME/$DIRECTORY" \
-              --checksum --verbose --stats-one-line
+              --checksum --verbose --stats-one-line --config=/dev/null
           fi
         done
+        # unlike other data, model-outputs are synced to a "raw" location
+        # so we can transform it before presenting to users
+        rclone sync ./model-output/ ":s3,provider=AWS,env_auth:$BUCKET_NAME/raw/model-output" \
+          --checksum --verbose --stats-one-line --config=/dev/null
       shell: bash
       env:
         BUCKET_NAME: ${{ env.CLOUD_STORAGE_LOCATION }}
