@@ -23,11 +23,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Install rclone
-      run: |
-        curl https://rclone.org/install.sh | sudo bash
-        rclone version
-
     - name: Get hub cloud config
       # save cloud-related fields from admin config as environment variables
       # (jq json parser is installed on Github-hosted runners)
@@ -46,6 +41,13 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/${{ env.CLOUD_STORAGE_LOCATION }}
         aws-region: us-east-1
+
+    - name: Install rclone
+      if: env.CLOUD_ENABLED == 'true'
+      run: |
+        curl https://rclone.org/install.sh | sudo bash
+        rclone version
+
 
     - name: Sync files to cloud storage
       # sync specified hub directories to S3
