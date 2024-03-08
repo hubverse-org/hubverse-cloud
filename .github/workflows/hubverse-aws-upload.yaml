@@ -24,9 +24,8 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Install rclone
-      # github-hosted runnners have homebrew pre-installed
       run: |
-        brew install rclone
+        curl https://rclone.org/install.sh | sudo bash
         rclone version
 
     - name: Get hub cloud config
@@ -53,8 +52,6 @@ jobs:
       # (to exclude a directory, remove it from the hub_directories list below)
       if: env.CLOUD_ENABLED == 'true'
       run: |
-        # add runner's homebrew location to the path so rclone can be found
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         hub_directories=(
           'auxiliary-data'
           'hub-config'
