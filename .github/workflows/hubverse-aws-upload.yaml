@@ -1,6 +1,7 @@
 name: Upload hub data to a hubverse-hosted AWS S3 bucket
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -25,7 +26,6 @@ jobs:
     - name: Install rclone
       # github-hosted runnners have homebrew pre-installed
       run: |
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         brew install rclone
         rclone version
 
@@ -53,6 +53,8 @@ jobs:
       # (to exclude a directory, remove it from the hub_directories list below)
       if: env.CLOUD_ENABLED == 'true'
       run: |
+        # add runner's homebrew location to the path so rclone can be found
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         hub_directories=(
           'auxiliary-data'
           'hub-config'
