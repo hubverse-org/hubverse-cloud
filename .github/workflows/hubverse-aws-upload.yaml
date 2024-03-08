@@ -1,7 +1,6 @@
-name: Upload hub data to cloud storage
+name: Upload hub data to a hubverse-hosted AWS S3 bucket
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -50,17 +49,16 @@ jobs:
 
     - name: Sync files to cloud storage
       # sync specified hub directories to S3
-      # (to exclude a directory, remove it from the list of hub_directories below)
+      # (to exclude a directory, remove it from the hub_directories list below)
       if: env.CLOUD_ENABLED == 'true'
       run: |
         hub_directories=(
-          'testy'
-          #'auxiliary-data'
-          #'hub-config'
-          #'model-abstracts'
-          #'model-metadata'
-          #'model-output'
-          #'target-data'
+          'auxiliary-data'
+          'hub-config'
+          'model-abstracts'
+          'model-metadata'
+          'model-output'
+          'target-data'
         )
         for DIRECTORY in "${hub_directories[@]}"
         do
@@ -69,3 +67,5 @@ jobs:
       shell: bash
       env:
         BUCKET_NAME: ${{ env.CLOUD_STORAGE_LOCATION }}
+
+
