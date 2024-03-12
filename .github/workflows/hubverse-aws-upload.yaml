@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Get hub cloud config
       # save cloud-related fields from admin config as environment variables
@@ -65,7 +65,7 @@ jobs:
         for DIRECTORY in "${hub_directories[@]}"
         do
           if [ -d "./$DIRECTORY" ]
-          then 
+          then
             rclone sync \
               "./$DIRECTORY/" \
               ":s3,provider=AWS,env_auth:$BUCKET_NAME/$DIRECTORY" \
