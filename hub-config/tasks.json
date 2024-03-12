@@ -343,7 +343,7 @@
             "submissions_due": {
                 "relative_to": "origin_date",
                 "start": -3000,
-                "end": 30
+                "end": 3000
             }
         }
     ]
