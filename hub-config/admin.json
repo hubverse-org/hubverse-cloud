@@ -1,12 +1,12 @@
 {
-    "schema_version": "https://raw.githubusercontent.com/Infectious-Disease-Modeling-Hubs/schemas/main/v2.0.1/admin-schema.json",
+    "schema_version": "https://raw.githubusercontent.com/hubverse-org/schemas/main/v2.0.1/admin-schema.json",
     "name": "S3 Testhub",
     "maintainer": "Consortium of Infectious Disease Modeling Hubs",
     "contact": {
         "name": "Kathryn Janeway",
         "email": "k.janeway@starfleet.com"
     },
-    "repository_url": "https://github.com/Infectious-Disease-Modeling-Hubs/s3-testhub",
+    "repository_url": "https://github.com/hubverse-org/hubverse-cloud",
     "file_format": ["csv", "parquet", "arrow"],
     "timezone": "US/Eastern",
     "cloud": {
