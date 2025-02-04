@@ -1,7 +1,6 @@
 name: Upload hub data to a hubverse-hosted AWS S3 bucket
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -17,7 +16,9 @@ permissions:
 
 jobs:
   upload:
-    runs-on: ubuntu-latest
+    # Don't run on forked repositories
+    if: github.event.repository.fork != true
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout
@@ -58,8 +59,6 @@ jobs:
           'hub-config'
           'model-abstracts'
           'model-metadata'
-          # model-output removed for lambda testing
-          # 'model-output'
           'target-data'
         )
         for DIRECTORY in "${hub_directories[@]}"
